@@ -1,7 +1,20 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import type { Applicant } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+// Lazy-initialized AI client to prevent app crash on load if API key is missing.
+let aiInstance: GoogleGenAI | null = null;
+
+const getAi = (): GoogleGenAI => {
+  if (!aiInstance) {
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+      // This error will be caught by the calling functions and displayed in the UI.
+      throw new Error("Gemini API key is not configured. Please ensure the API_KEY environment variable is set in your deployment environment.");
+    }
+    aiInstance = new GoogleGenAI({ apiKey });
+  }
+  return aiInstance;
+};
 
 // Helper function to convert a File object to a GoogleGenerativeAI.Part object
 const fileToGenerativePart = async (file: File) => {
@@ -18,6 +31,7 @@ const fileToGenerativePart = async (file: File) => {
 
 
 export const parseResume = async (file: File): Promise<{name: string, role: string, email: string, phone: string, summary: string}> => {
+  const ai = getAi();
   const filePart = await fileToGenerativePart(file);
   const prompt = "Analyze this resume and extract the applicant's full name, the job role they seem most qualified for, their email address, their phone number, and a brief summary of their skills and experience.";
 
@@ -49,6 +63,7 @@ export const parseResume = async (file: File): Promise<{name: string, role: stri
 };
 
 export async function summarizeNotes(applicant: Applicant): Promise<string> {
+  const ai = getAi();
   if (!applicant.notes?.length) return "No notes to summarize.";
 
   const allNotes = applicant.notes
@@ -68,6 +83,7 @@ export async function generateInterviewQuestions(
   numQuestions: number,
   focus: string
 ): Promise<string> {
+  const ai = getAi();
   const focusLine = focus?.trim() ? `Focus on: ${focus.trim()}. ` : "";
   const prompt =
     `Generate ${numQuestions} insightful interview questions for ${applicant.name} applying for ${applicant.role}. ` +
@@ -79,6 +95,7 @@ export async function generateInterviewQuestions(
 }
 
 export const generateProfessionalFollowUpEmail = async (applicant: Applicant): Promise<{ subject: string; body: string }> => {
+  const ai = getAi();
   const prompt = `Generate a professional, general-purpose follow-up email to a job applicant.
   
   **Applicant Details:**
@@ -129,6 +146,7 @@ export const generateProfessionalFollowUpEmail = async (applicant: Applicant): P
 };
 
 export const generateCustomEmail = async (applicant: Applicant, userPrompt: string): Promise<{ subject: string; body: string }> => {
+  const ai = getAi();
   if (!userPrompt.trim()) {
     return { subject: '', body: '' };
   }
