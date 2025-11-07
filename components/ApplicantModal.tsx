@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Applicant, TeamMember, Task, Note, Attachment, TaskStatus, Stage } from '../types';
+import { Applicant, TeamMember, Task, Note, Attachment, TaskStatus } from '../types';
 import { 
     summarizeNotes, generateInterviewQuestions
 } from './Gemini';

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { CameraIcon } from './icons/CameraIcon';
 import { RefreshCwIcon } from './icons/RefreshCwIcon';
 import { CheckIcon } from './icons/CheckIcon';
 

@@ -1,7 +1,7 @@
 // FIX: Populated file with correct content and updated relative import paths.
 import React from 'react';
 // FIX: Updated import path for types.
-import { Applicant, TeamMember, Stage } from '../../types';
+import { Applicant, TeamMember } from '../../types';
 import { ApplicantListItem } from './ApplicantListItem';
 import { UsersIcon } from '../icons/UsersIcon';
 

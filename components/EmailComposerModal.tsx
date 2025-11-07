@@ -2,20 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Applicant } from '../types';
 import { generateCustomEmail, generateProfessionalFollowUpEmail } from './Gemini';
 import { supabase } from '../supabaseClient';
-import { Session } from '@supabase/supabase-js';
 import { sendEmail } from './communications';
 import { CheckCircleIcon } from './icons/CheckCircleIcon';
 import { XCircleIcon } from './icons/XCircleIcon';
 
 interface EmailComposerModalProps {
   applicant: Applicant;
-  session: Session;
   onClose: () => void;
 }
 
 type Status = 'idle' | 'generating' | 'sending' | 'success' | 'error';
 
-export const EmailComposerModal: React.FC<EmailComposerModalProps> = ({ applicant, session, onClose }) => {
+export const EmailComposerModal: React.FC<EmailComposerModalProps> = ({ applicant, onClose }) => {
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
   const [aiPrompt, setAiPrompt] = useState('');

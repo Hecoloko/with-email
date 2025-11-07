@@ -442,7 +442,7 @@ const App: React.FC = () => {
     );
   }
 
-  const applicantCounts = ['All', ...STAGES].reduce((acc, stage) => {
+  const applicantCounts = (['All', ...STAGES] as (Stage | 'All')[]).reduce((acc, stage) => {
       if (stage === 'All') {
         acc[stage] = applicants.length;
       } else {
@@ -490,10 +490,9 @@ const App: React.FC = () => {
         />
       )}
 
-      {applicantForEmail && session && (
+      {applicantForEmail && (
         <EmailComposerModal 
           applicant={applicantForEmail}
-          session={session}
           onClose={() => setApplicantForEmail(null)}
         />
       )}
