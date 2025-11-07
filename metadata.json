@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Email worked on this",
+  "description": "A Kanban-style board to track job applicants through the hiring pipeline. Schedule interviews, assign tasks, and generate interview questions with AI.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
