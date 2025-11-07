@@ -40,7 +40,11 @@ export const parseResume = async (file: File): Promise<{name: string, role: stri
     }
   });
   
-  const parsedData = JSON.parse(response.text);
+  const responseText = response.text;
+  if (!responseText) {
+    throw new Error("AI did not return a valid response for resume parsing.");
+  }
+  const parsedData = JSON.parse(responseText);
   return parsedData;
 };
 
@@ -56,7 +60,7 @@ export async function summarizeNotes(applicant: Applicant): Promise<string> {
     `Focus on strengths, weaknesses, and action items. Be concise and professional.\n\n${allNotes}`;
 
   const response = await ai.models.generateContent({ model: "gemini-2.5-flash", contents: prompt });
-  return response.text;
+  return response.text ?? "Could not generate a summary from the notes.";
 }
 
 export async function generateInterviewQuestions(
@@ -71,7 +75,7 @@ export async function generateInterviewQuestions(
     `Keep them specific and practical.`;
 
   const response = await ai.models.generateContent({ model: "gemini-2.5-flash", contents: prompt });
-  return response.text;
+  return response.text ?? "Could not generate interview questions.";
 }
 
 export const generateProfessionalFollowUpEmail = async (applicant: Applicant): Promise<{ subject: string; body: string }> => {
@@ -112,7 +116,11 @@ export const generateProfessionalFollowUpEmail = async (applicant: Applicant): P
         }
     });
 
-    const parsed = JSON.parse(response.text);
+    const responseText = response.text;
+    if (!responseText) {
+        throw new Error("AI did not return a valid response for email generation.");
+    }
+    const parsed = JSON.parse(responseText);
     return parsed;
   } catch (error) {
     console.error("Gemini email generation failed:", error);
@@ -161,7 +169,11 @@ export const generateCustomEmail = async (applicant: Applicant, userPrompt: stri
         }
     });
 
-    const parsed = JSON.parse(response.text);
+    const responseText = response.text;
+    if (!responseText) {
+        throw new Error("AI did not return a valid response for custom email generation.");
+    }
+    const parsed = JSON.parse(responseText);
     return parsed;
   } catch (error) {
     console.error("Gemini email generation failed:", error);
