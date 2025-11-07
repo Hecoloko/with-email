@@ -1,11 +1,21 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import type { Applicant } from "../types";
 
+// FIX: Declare `process` to satisfy TypeScript for environment variable access,
+// as per the coding guidelines which mandate using `process.env.API_KEY`.
+declare const process: {
+  env: {
+    API_KEY: string;
+  };
+};
+
 // Lazy-initialized AI client to prevent app crash on load if API key is missing.
 let aiInstance: GoogleGenAI | null = null;
 
 const getAi = (): GoogleGenAI => {
   if (!aiInstance) {
+    // FIX: Switched from `import.meta.env.VITE_API_KEY` to `process.env.API_KEY`
+    // to comply with the coding guidelines.
     const apiKey = process.env.API_KEY;
     if (!apiKey) {
       // This error will be caught by the calling functions and displayed in the UI.
